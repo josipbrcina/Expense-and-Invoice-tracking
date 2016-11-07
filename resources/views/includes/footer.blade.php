@@ -7,4 +7,4 @@
     }
 </style>
 
-<div id="footer"> Copyright© {{ date("Y") . "." }} The Shopy Company </div>
+<!-- <div id="footer"> Copyright© {{ date("Y") . "." }} The Shopy Company </div> -->

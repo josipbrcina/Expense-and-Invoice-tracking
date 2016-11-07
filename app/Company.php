@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
-    protected $fillable = ['name', 'address'];
+    protected $fillable = ['name', 'address', 'user_id'];
 
     public function user(){
-        return $this->hasOne('App\User', 'user_id' , 'id');
+        return $this->belongsTo('App\User');
     }
 }

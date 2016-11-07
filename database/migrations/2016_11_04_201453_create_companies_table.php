@@ -15,6 +15,7 @@ class CreateCompaniesTable extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->increments('id');
+            $table->char('OIB', 11);
             $table->string('name');
             $table->string('address');
             $table->integer('user_id');

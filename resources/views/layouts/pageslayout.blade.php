@@ -4,6 +4,10 @@
 <body>
     <div id="app">
         @include ('includes.navbar');
+         <div id="sidebar" class="col-md-2">
+            @include ('includes.sidebar');
+         </div>
+
         <div class="col-md-8">
             @yield('content')
         </div>
