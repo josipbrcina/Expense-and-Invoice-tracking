@@ -17,7 +17,7 @@ class CreateExpensesTable extends Migration
             $table->increments('id');
             $table->string('type');
             $table->string('name');
-            $table->decimal('amount', 5, 2);
+            $table->decimal('amount', 10, 2);
             $table->integer('company_id');
             $table->integer('user_id');
             $table->timestamps();

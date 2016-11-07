@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Invoice;
+use App\Company;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -19,7 +21,8 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        return view('pages.invoices.index');
+        $allInvoices = Invoice::all();
+        return View('pages.invoices.index')->withInvoices($allInvoices);
     }
 
     /**
@@ -29,7 +32,8 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        //
+        $companies = Company::all()->pluck('name' , 'id');
+        return View('pages.invoices.create')->withCompanies($companies);
     }
 
     /**
@@ -40,7 +44,31 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = array(
+            'due_date'    => 'required',
+            'amount'      => 'required',
+            'company_id'  => 'required'
+        );
+        $validator = \Validator::make(\Input::all(), $rules);
+
+        // process the create
+        if ($validator->fails()) {
+            return \Redirect::to('invoices/create')
+                ->withErrors($validator)
+                ->withInput(\Input::except('due_date', 'company_id'));
+        } else {
+            // store
+            $invoice = new invoice;
+            $invoice->due_date   = \Input::get('due_date');
+            $invoice->amount     = \Input::get('amount');
+            $invoice->company_id = \Input::get('company_id');
+            $invoice->user_id    = \Input::get('user_id');
+            $invoice->save();
+
+            // redirect
+            \Session::flash('message', 'Successfully created invoice!');
+            return \Redirect::to('invoices');
+        }
     }
 
     /**
@@ -62,7 +90,11 @@ class InvoiceController extends Controller
      */
     public function edit($id)
     {
-        //
+        $invoice = Invoice::find($id);
+        $companies = Company::all()->pluck('name' , 'id');
+
+
+        return view('pages.invoices.edit')->withInvoices($invoice)->withCompanies($companies);
     }
 
     /**
@@ -74,7 +106,31 @@ class InvoiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $rules = array(
+            'due_date'    => 'required',
+            'amount'      => 'required',
+            'company_id'  => 'required'
+        );
+        $validator = \Validator::make(\Input::all(), $rules);
+
+        // process the create
+        if ($validator->fails()) {
+            return \Redirect::to('invoices/' . $id .'create')
+                ->withErrors($validator)
+                ->withInput(\Input::except('due_date', 'company_id'));
+        } else {
+            // store
+            $invoice = Invoice::find($id);
+            $invoice->due_date   = \Input::get('due_date');
+            $invoice->amount     = \Input::get('amount');
+            $invoice->company_id = \Input::get('company_id');
+            $invoice->user_id    = \Input::get('user_id');
+            $invoice->save();
+
+            // redirect
+            \Session::flash('message', 'Successfully edited invoice!');
+            return \Redirect::to('invoices');
+        }
     }
 
     /**
@@ -85,6 +141,12 @@ class InvoiceController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // delete
+        $invoice = Invoice::find($id);
+        $invoice->delete();
+
+        //redirect
+        \Session::flash('message', 'Successfully deleted invoice!');
+        return \Redirect::to('invoices');
     }
 }

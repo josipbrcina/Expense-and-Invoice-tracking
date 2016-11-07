@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Expense;
+use App\Company;
+
 use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
@@ -19,7 +22,8 @@ class ExpenseController extends Controller
      */
     public function index()
     {
-        return view('pages.expenses.index');
+        $allExpenses = Expense::all();
+        return View('pages.expenses.index')->withExpenses($allExpenses);
     }
 
     /**
@@ -29,7 +33,8 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        //
+        $companies = Company::all()->pluck('name' , 'id');
+        return View('pages.expenses.create')->withCompanies($companies);
     }
 
     /**
@@ -40,7 +45,33 @@ class ExpenseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = array(
+            'type'        => 'required',
+            'name'        => 'required',
+            'amount'      => 'required',
+            'company_id'  => 'required'
+        );
+        $validator = \Validator::make(\Input::all(), $rules);
+
+        // process the create
+        if ($validator->fails()) {
+            return \Redirect::to('expenses/create')
+                ->withErrors($validator)
+                ->withInput(\Input::except('type', 'name', 'amount', 'company_id'));
+        } else {
+            // store
+            $expense = new Expense;
+            $expense->type       = \Input::get('type');
+            $expense->name       = \Input::get('name');
+            $expense->amount     = \Input::get('amount');
+            $expense->company_id = \Input::get('company_id');
+            $expense->user_id    = \Input::get('user_id');
+            $expense->save();
+
+            // redirect
+            \Session::flash('message', 'Successfully created expense!');
+            return \Redirect::to('expenses');
+        }
     }
 
     /**
@@ -62,7 +93,11 @@ class ExpenseController extends Controller
      */
     public function edit($id)
     {
-        //
+        $expense = Expense::find($id);
+        $companies = Company::all()->pluck('name' , 'id');
+
+
+        return view('pages.expenses.edit')->withExpense($expense)->withCompanies($companies);
     }
 
     /**
@@ -74,7 +109,33 @@ class ExpenseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $rules = array(
+            'type'        => 'required',
+            'name'        => 'required',
+            'amount'      => 'required',
+            'company_id'  => 'required'
+        );
+        $validator = \Validator::make(\Input::all(), $rules);
+
+        // process the create
+        if ($validator->fails()) {
+            return \Redirect::to('expenses/' . $id .'edit')
+                ->withErrors($validator)
+                ->withInput(\Input::except('type', 'name', 'amount', 'company_id'));
+        } else {
+            // store
+            $expense = Expense::find($id);
+            $expense->type       = \Input::get('type');
+            $expense->name       = \Input::get('name');
+            $expense->amount     = \Input::get('amount');
+            $expense->company_id = \Input::get('company_id');
+            $expense->user_id    = \Input::get('user_id');
+            $expense->save();
+
+            // redirect
+            \Session::flash('message', 'Successfully updated expense!');
+            return \Redirect::to('expenses');
+        }
     }
 
     /**
@@ -85,6 +146,15 @@ class ExpenseController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // delete
+        $expense = Expense::find($id);
+        $expense->delete();
+
+        //redirect
+
+        \Session::flash('message', 'Successfully deleted expense!');
+        return \Redirect::to('expenses');
+
+
     }
 }
