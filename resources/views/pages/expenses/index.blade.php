@@ -39,7 +39,7 @@
                         <td>
 
                             <a class="btn btn-primary" href="{{ URL::to('expenses/' . $expense->id . '/edit') }}">Edit</a>
-                            {{ Form::open(array('url' => 'expenses/' . $expense->id, 'class' => 'pull-right')) }}
+                            {{ Form::open(array('url' => 'expenses/' . $expense->id, 'class' => 'pull-right', 'onsubmit' => 'return ConfirmDelete()')) }}
                             {{ Form::hidden('_method', 'DELETE') }}
                             {{ Form::submit('Delete', array('class' => 'btn btn-danger')) }}
                             {{ Form::close() }}
@@ -53,5 +53,18 @@
     </div>
 </div>
 @endsection
+
+<script>
+
+    function ConfirmDelete()
+    {
+        var x = confirm("Are you sure you want to delete?");
+        if (x)
+            return true;
+        else
+            return false;
+    }
+
+</script>
 
 

@@ -18,6 +18,12 @@
                     {{ Form::label('address', 'Address') }}
                     {{ Form::text('address', Input::old('address'), array('class' => 'form-control')) }}
                 </div>
+
+                <div class="form-group">
+                    {{ Form::label('OIB', 'OIB') }}
+                    {{ Form::text('OIB', Input::old('OIB'), array('class' => 'form-control')) }}
+                </div>
+
                 {{ Form::hidden('user_id', Auth::user()->id) }}
 
                 {{ Form::submit('Edit existing Company!', array('class' => 'btn btn-primary')) }}

@@ -119,7 +119,7 @@ class ExpenseController extends Controller
 
         // process the create
         if ($validator->fails()) {
-            return \Redirect::to('expenses/' . $id .'edit')
+            return \Redirect::to('expenses/' . $id .'/edit')
                 ->withErrors($validator)
                 ->withInput(\Input::except('type', 'name', 'amount', 'company_id'));
         } else {

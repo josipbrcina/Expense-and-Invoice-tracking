@@ -13,6 +13,7 @@ class CompanyController extends Controller
     {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,6 +23,19 @@ class CompanyController extends Controller
     {
         $allCompanies = Company::all();
         return View('pages.companies.index')->withCompanies($allCompanies);
+    }
+
+    public function search()
+    {
+        $company = Company::query();
+
+        if(\Input::has('value')){
+            $company->where(\Input::get('field'), 'LIKE', '%' . \Input::get('value') . '%');
+        }
+
+        return View('pages.companies.index', ['companies' => $company->get()]);
+
+
     }
 
     /**

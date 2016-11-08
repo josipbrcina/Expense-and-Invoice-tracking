@@ -10,8 +10,8 @@
                 {{ Html::ul($errors->all()) }}
 
                 <div class="form-group">
-                    {{ Form::label('due_date', 'Due Date') }}
-                    {{ Form::text('due_date', Input::old('due_date'), array('class' => 'form-control')) }}
+                {{ Form::label('due_date', 'Due Date') }}
+                {{ Form::text('due_date', Input::old('due_date'), array('class' => 'hasDatepicker form-control', 'id' => 'datepicker')) }}
                 </div>
 
                 <div class="form-group">
@@ -35,8 +35,8 @@
             </div>
         </div>
     </div>
-@endsection
 
+@endsection
 
 
 

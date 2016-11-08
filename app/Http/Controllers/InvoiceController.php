@@ -115,7 +115,7 @@ class InvoiceController extends Controller
 
         // process the create
         if ($validator->fails()) {
-            return \Redirect::to('invoices/' . $id .'create')
+            return \Redirect::to('invoices/' . $id . '/edit')
                 ->withErrors($validator)
                 ->withInput(\Input::except('due_date', 'company_id'));
         } else {
@@ -128,7 +128,7 @@ class InvoiceController extends Controller
             $invoice->save();
 
             // redirect
-            \Session::flash('message', 'Successfully edited invoice!');
+            \Session::flash('message', 'Successfully updated invoice!');
             return \Redirect::to('invoices');
         }
     }

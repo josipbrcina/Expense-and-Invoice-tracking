@@ -12,7 +12,9 @@
 <link href="/css/app.css" rel="stylesheet">
 
 <!-- Scripts -->
-<script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+    <script>
+
     window.Laravel = <?php echo json_encode([
             'csrfToken' => csrf_token(),
     ]); ?>

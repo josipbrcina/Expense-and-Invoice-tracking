@@ -22,3 +22,5 @@ Route::get('/chart', 'ChartController@index');
 Route::resource('expenses', 'ExpenseController');
 Route::resource('companies', 'CompanyController');
 Route::resource('invoices', 'InvoiceController');
+
+Route::get('/search-companies','CompanyController@search');

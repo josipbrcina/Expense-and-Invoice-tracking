@@ -9,6 +9,13 @@
             @endif
             <h4 align="center"> List of all companies</h4>
             <a href="{{ URL::to('companies/create') }}" class="btn btn-default">Add new company</a>
+                {{ Form::open(array('url' => '/search-companies', 'method' => 'get', 'class' => 'pull-right')) }}
+
+                {{ Form::select('field', array('name' => 'Company name', 'OIB' => 'OIB'))}}
+                {{ Form::text('value', Input::old('name'), array('class' => 'form-control')) }}
+
+                {{ Form::submit('Search', array('class' => 'btn btn-primary')) }}
+                {{ Form::close() }}
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
@@ -38,7 +45,7 @@
                         <td>
 
                             <a class="btn btn-small btn-primary" href="{{ URL::to('companies/' . $company->id . '/edit') }}">Edit</a>
-                            {{ Form::open(array('url' => 'companies/' . $company->id, 'class' => 'pull-right')) }}
+                            {{ Form::open(array('url' => 'companies/' . $company->id, 'class' => 'pull-right', 'onsubmit' => 'return ConfirmDelete()')) }}
                             {{ Form::hidden('_method', 'DELETE') }}
                             {{ Form::submit('Delete', array('class' => 'btn btn-danger')) }}
                             {{ Form::close() }}
@@ -52,5 +59,18 @@
     </div>
 </div>
 @endsection
+
+<script>
+
+    function ConfirmDelete()
+    {
+        var x = confirm("Are you sure you want to delete?");
+        if (x)
+            return true;
+        else
+            return false;
+    }
+
+</script>
 
 
