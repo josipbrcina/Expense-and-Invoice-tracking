@@ -9,6 +9,26 @@
             @endif
             <h4 align="center"> List of all expenses</h4>
             <a href="{{ URL::to('expenses/create') }}" class="btn btn-default">Add new expense</a>
+                {{ Form::open(array('url' => '/search-expenses', 'method' => 'get', 'class' => 'pull-right')) }}
+
+                {{ Form::label('name', 'Company name') }}
+                {{ Form::text('name', Input::old('name'), array('class' => 'form-control')) }}
+
+                {{ Form::label('startdate', 'Created_at (from)') }}
+                {{ Form::text('startdate', Input::old('startdate'), array('class' => 'form-control', 'id' => 'datepicker')) }}
+
+                {{ Form::label('enddate', 'Created_at (to)') }}
+                {{ Form::text('enddate', Input::old('enddate'), array('class' => 'form-control', 'id' => 'datepicker2')) }}
+
+                {{ Form::label('startamount', 'Amount (from)') }}
+                {{ Form::text('startamount', Input::old('startamount'), array('class' => 'form-control')) }}
+
+                {{ Form::label('endamount', 'Amount (to)') }}
+                {{ Form::text('endamount', Input::old('endamount'), array('class' => 'form-control')) }}
+
+                {{ Form::submit('Search', array('class' => 'btn btn-primary')) }}
+                {{ Form::close() }}
+
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>

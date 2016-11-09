@@ -26,6 +26,58 @@ class ExpenseController extends Controller
         return View('pages.expenses.index')->withExpenses($allExpenses);
     }
 
+    public function search()
+    {
+        $companyQuery = Company::query();
+        $expenseQuery = Expense::query();
+
+        // check if input created_at (from) exists
+        if(\Input::has('startdate')) {
+            $expenseQuery->whereDate('created_at', '>=', \Input::get('startdate'));
+        }
+
+        // check if input created_at (to) exists
+        if(\Input::has('enddate')){
+            $expenseQuery->whereDate('created_at', '<=', \Input::get('enddate'));
+        }
+
+        // check if input amount (from) exists
+        if(\Input::has('startamount')) {
+            $expenseQuery->where('amount', '>=', \Input::get('startamount'));
+        }
+
+        // check if input amount (to) exists
+        if(\Input::has('endamount')){
+            $expenseQuery->where('amount', '<=', \Input::get('endamount'));
+        }
+
+        // confirm query
+        $expensesArray = $expenseQuery->get();
+
+        //check if input name exists, if do exist -> loop through Company
+        if(\Input::has('name')) {
+            $name = '%' . \Input::get('name') . '%';
+            $companies = $companyQuery->where('name', 'LIKE', $name)->get();
+
+            // loop through companies and expenses, find match and fill array
+            $tmpExpenses = [];
+            foreach ($companies as $company){
+                foreach ($expensesArray as $expense){
+                    if($company->id == $expense->company_id){
+                        $tmpExpenses[] = $expense;
+                    } else {
+                        continue;
+                    }
+                }
+            }
+
+            // revert variables - prepare for return into view
+            $expensesArray = $tmpExpenses;
+        }
+
+        return View('pages.expenses.index', ['expenses' => $expensesArray]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

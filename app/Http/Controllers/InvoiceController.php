@@ -35,22 +35,22 @@ class InvoiceController extends Controller
         $companyQuery = Company::query();
         $invoiceQuery = Invoice::query();
 
-        // check if input start due date exist
+        // check if input start due date exists
         if(\Input::has('startdate')) {
             $invoiceQuery->where('due_date', '>=', \Input::get('startdate'));
         }
 
-        // check if input end due date exist
+        // check if input end due date exists
         if(\Input::has('enddate')){
             $invoiceQuery->where('due_date', '<=', \Input::get('enddate'));
         }
 
-        // check if input amount (from) exist
+        // check if input amount (from) exists
         if(\Input::has('startamount')) {
             $invoiceQuery->where('amount', '>=', \Input::get('startamount'));
         }
 
-        // check if input amount (to) exist
+        // check if input amount (to) exists
         if(\Input::has('endamount')){
             $invoiceQuery->where('amount', '<=', \Input::get('endamount'));
         }
@@ -58,12 +58,12 @@ class InvoiceController extends Controller
         // confirm query
         $invoicesArray = $invoiceQuery->get();
 
-        //check if input name exist, if do loop through Company
+        //check if input name exists, if do exist -> loop through Company
         if(\Input::has('name')) {
             $name = '%' . \Input::get('name') . '%';
             $companies = $companyQuery->where('name', 'LIKE', $name)->get();
 
-            // loop through companies and invoices, find matched and fill array
+            // loop through companies and invoices, find match and fill array
             $tmpInvoices = [];
             foreach ($companies as $company){
                 foreach ($invoicesArray as $invoice){

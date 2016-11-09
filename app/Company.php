@@ -15,4 +15,8 @@ class Company extends Model
     public function invoice(){
         return $this->hasMany('App\Invoice');
     }
+
+    public function expense(){
+        return $this->hasMany('App\Expense');
+    }
 }
