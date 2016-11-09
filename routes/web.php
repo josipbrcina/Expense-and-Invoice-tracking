@@ -24,3 +24,5 @@ Route::resource('companies', 'CompanyController');
 Route::resource('invoices', 'InvoiceController');
 
 Route::get('/search-companies','CompanyController@search');
+Route::get('/search-invoices','InvoiceController@search');
+

@@ -9,11 +9,33 @@
             @endif
             <h4 align="center"> List of all invoices</h4>
             <a href="{{ URL::to('invoices/create') }}" class="btn btn-default">Add new invoice</a>
+                {{ Form::open(array('url' => '/search-invoices', 'method' => 'get', 'class' => 'pull-right')) }}
+
+                {{ Form::label('name', 'Company name') }}
+                {{ Form::text('name', Input::old('name'), array('class' => 'form-control')) }}
+
+                {{ Form::label('startdate', 'Start due_date') }}
+                {{ Form::text('startdate', Input::old('startdate'), array('class' => 'form-control', 'id' => 'datepicker')) }}
+
+                {{ Form::label('enddate', 'End due_date') }}
+                {{ Form::text('enddate', Input::old('enddate'), array('class' => 'form-control', 'id' => 'datepicker2')) }}
+
+                {{ Form::label('startamount', 'Amount (from)') }}
+                {{ Form::text('startamount', Input::old('startamount'), array('class' => 'form-control')) }}
+
+                {{ Form::label('endamount', 'Amount (to)') }}
+                {{ Form::text('endamount', Input::old('endamount'), array('class' => 'form-control')) }}
+
+                {{ Form::submit('Search', array('class' => 'btn btn-primary')) }}
+                {{ Form::close() }}
+
+
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
                     <td>ID</td>
                     <td>Invoice due date</td>
+                    <td>Amount</td>
                     <td>Company</td>
                     <td>Created at</td>
                     <td>Updated at</td>
@@ -25,7 +47,8 @@
                 @foreach($invoices as $invoice)
                     <tr>
                         <td>{{ $invoice->id }}</td>
-                        <td>{{ $invoice->dateTime }}</td>
+                        <td>{{ $invoice->due_date }}</td>
+                        <td>{{ $invoice->amount }}</td>
                         <td>{{ $invoice->company->name }}</td>
                         <td>{{ $invoice->created_at }}</td>
                         <td>{{ $invoice->updated_at }}</td>
@@ -49,17 +72,3 @@
     </div>
 </div>
 @endsection
-
-<script>
-
-    function ConfirmDelete()
-    {
-        var x = confirm("Are you sure you want to delete?");
-        if (x)
-            return true;
-        else
-            return false;
-    }
-
-</script>
-

@@ -26,6 +26,63 @@ class InvoiceController extends Controller
     }
 
     /**
+     * Handle the search query in pages.invoices.index
+     * @return search result
+     *
+     */
+    public function search()
+    {
+        $companyQuery = Company::query();
+        $invoiceQuery = Invoice::query();
+
+        // check if input start due date exist
+        if(\Input::has('startdate')) {
+            $invoiceQuery->where('due_date', '>=', \Input::get('startdate'));
+        }
+
+        // check if input end due date exist
+        if(\Input::has('enddate')){
+            $invoiceQuery->where('due_date', '<=', \Input::get('enddate'));
+        }
+
+        // check if input amount (from) exist
+        if(\Input::has('startamount')) {
+            $invoiceQuery->where('amount', '>=', \Input::get('startamount'));
+        }
+
+        // check if input amount (to) exist
+        if(\Input::has('endamount')){
+            $invoiceQuery->where('amount', '<=', \Input::get('endamount'));
+        }
+
+        // confirm query
+        $invoicesArray = $invoiceQuery->get();
+
+        //check if input name exist, if do loop through Company
+        if(\Input::has('name')) {
+            $name = '%' . \Input::get('name') . '%';
+            $companies = $companyQuery->where('name', 'LIKE', $name)->get();
+
+            // loop through companies and invoices, find matched and fill array
+            $tmpInvoices = [];
+            foreach ($companies as $company){
+                foreach ($invoicesArray as $invoice){
+                    if($company->id == $invoice->company_id){
+                        $tmpInvoices[] = $invoice;
+                    } else {
+                        continue;
+                    }
+                }
+            }
+
+            // revert variables - prepare for return into view
+            $invoicesArray = $tmpInvoices;
+        }
+
+        return View('pages.invoices.index', ['invoices' => $invoicesArray]);
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

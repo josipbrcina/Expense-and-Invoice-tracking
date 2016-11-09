@@ -12,7 +12,7 @@
                 {{ Form::open(array('url' => '/search-companies', 'method' => 'get', 'class' => 'pull-right')) }}
 
                 {{ Form::select('field', array('name' => 'Company name', 'OIB' => 'OIB'))}}
-                {{ Form::text('value', Input::old('name'), array('class' => 'form-control')) }}
+                {{ Form::text('value', Input::old('value'), array('class' => 'form-control')) }}
 
                 {{ Form::submit('Search', array('class' => 'btn btn-primary')) }}
                 {{ Form::close() }}
@@ -60,17 +60,6 @@
 </div>
 @endsection
 
-<script>
 
-    function ConfirmDelete()
-    {
-        var x = confirm("Are you sure you want to delete?");
-        if (x)
-            return true;
-        else
-            return false;
-    }
-
-</script>
 
 
