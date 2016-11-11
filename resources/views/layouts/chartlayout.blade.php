@@ -52,7 +52,7 @@
             // create data object
 
             var data = {
-                labels : ["January", "February", "March", "April", ["June","2015"], "July", "August", "September", "Oktober", "November", "December"],
+                labels : ["January", "February", "March", "April", ["June","2015"], "July", "August", "September", "October", "November", "December"],
                 datasets : [
                     {
                         label: 'Expenses',
@@ -61,7 +61,7 @@
                         strokeColor: "rgba(220,220,220,1)",
                         pointColor: "rgba(220,220,220,1)",
                         pointStrokeColor: "#fff",
-                        data: [35, 20, 110, 81, 56, 55, 44, 124, 55, 65, 133]
+                        data: [90+100, 20, 110, 81, 56, 55, 44, 124, 55, 65, 133,]
 
 
                     },
@@ -80,10 +80,11 @@
 
             var option = {
                 BezierCurveTension : 0.2,
-                pointDotRadius : 4
+                pointDotRadius : 4,
+
             };
 
-            //get the content of canvas element we want do select
+            //get the content of canvas element we want to select
 
             var chart = document.getElementById('chart').getContext('2d');
             var lineChartInstance = new Chart(chart).Line(data, option);

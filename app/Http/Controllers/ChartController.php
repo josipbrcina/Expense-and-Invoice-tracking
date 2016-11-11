@@ -19,7 +19,7 @@ class ChartController extends Controller
         return view('pages.chart');
     }
 
-    // Chart view generator
+    // Chart view generator time generator
     public function generate()
     {
         $expenseQuery = Expense::query();
@@ -41,6 +41,45 @@ class ChartController extends Controller
         $expensesArray = $expenseQuery->get();
         $invoicesArray = $invoiceQuery->get();
 
+
+
+        // calculate expenses and invoices for each month for Chart display
+
+        $expensesChart = [];
+        $invoicesChart = [];
+
+            // loop and fill expensesChart array with month => total expenses
+        foreach ($expensesArray as $expense){
+                $date = date("n", strtotime($expense->date));
+                if(empty($expensesChart)){
+                    $expensesChart[$date] = $expense->amount;
+                } elseif (key_exists($date, $expensesChart)){
+                    $expensesChart[$date] += $expense->amount;
+                } else {
+                    $expensesChart[$date] = $expense->amount;
+                }
+        }
+
+            // loop and fill invoicesChart array with month => total invoices
+
+        foreach ($invoicesArray as $invoice){
+            $date = date("n", strtotime($invoice->due_date));
+            if(empty($invoicesChart)){
+                $invoicesChart[$date] = $invoice->amount;
+            } elseif (key_exists($date, $invoicesChart)){
+                $invoicesChart[$date] += $invoice->amount;
+            } else {
+                $invoicesChart[$date] = $invoice->amount;
+            }
+        }
+
+        // sort expensesChart and invoicesChart array by month (low to high)
+
+        ksort($expensesChart);
+        ksort($invoicesChart);
+
+
+        // find total number of Expenses and Invoices for view report
         $totalExpenses = [];
         $totalInvoices = [];
 
@@ -52,7 +91,7 @@ class ChartController extends Controller
             $totalInvoices[] = $invoice->amount;
         }
 
-
+        // return view with all required data for displaying chart and report
         return View('pages.chart', [
                                     'expenses' => $expensesArray,
                                     'invoices' => $invoicesArray,

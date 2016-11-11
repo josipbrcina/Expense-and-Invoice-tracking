@@ -75,7 +75,7 @@ class InvoiceController extends Controller
                 }
             }
 
-            // revert variables - prepare for return into view
+            // revert variables for view
             $invoicesArray = $tmpInvoices;
         }
 
