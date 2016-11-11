@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateInvoicesTable extends Migration
+class InvoicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,9 +17,15 @@ class CreateInvoicesTable extends Migration
             $table->increments('id');
             $table->date('due_date');
             $table->decimal('amount', 10, 2);
-            $table->integer('company_id');
-            $table->integer('user_id');
+            $table->integer('company_id')->unsigned();
+            $table->integer('user_id')->unsigned();
             $table->timestamps();
+            $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onDelete('cascade');
+            $table->foreign('company_id')
+                ->references('id')->on('companies')
+                ->onDelete('cascade');
         });
     }
 
@@ -30,6 +36,6 @@ class CreateInvoicesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('invoices');
+        Schema::drop('invoices');
     }
 }

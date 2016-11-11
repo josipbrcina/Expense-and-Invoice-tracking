@@ -20,6 +20,11 @@
                 </div>
 
                 <div class="form-group">
+                    {{ Form::label('date', 'Date') }}
+                    {{ Form::text('date', Input::old('date'), array('class' => 'form-control', 'id' => 'datepicker')) }}
+                </div>
+
+                <div class="form-group">
                     {{ Form::label('amount', 'Amount') }}
                     {{ Form::text('amount', Input::old('amount'), array('class' => 'form-control')) }}
                 </div>

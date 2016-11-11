@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateExpensesTable extends Migration
+class ExpensesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,10 +17,17 @@ class CreateExpensesTable extends Migration
             $table->increments('id');
             $table->string('type');
             $table->string('name');
+            $table->date('date');
             $table->decimal('amount', 10, 2);
-            $table->integer('company_id');
-            $table->integer('user_id');
+            $table->integer('company_id')->unsigned();
+            $table->integer('user_id')->unsigned();
             $table->timestamps();
+            $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onDelete('cascade');
+            $table->foreign('company_id')
+                ->references('id')->on('companies')
+                ->onDelete('cascade');
         });
     }
 
@@ -31,6 +38,6 @@ class CreateExpensesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('expenses');
+        Schema::drop('expenses');
     }
 }

@@ -151,7 +151,7 @@ class InvoiceController extends Controller
         $companies = Company::all()->pluck('name' , 'id');
 
 
-        return view('pages.invoices.edit')->withInvoices($invoice)->withCompanies($companies);
+        return view('pages.invoices.edit')->withInvoice($invoice)->withCompanies($companies);
     }
 
     /**

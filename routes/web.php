@@ -26,4 +26,5 @@ Route::resource('invoices', 'InvoiceController');
 Route::get('/search-companies','CompanyController@search');
 Route::get('/search-invoices','InvoiceController@search');
 Route::get('/search-expenses','ExpenseController@search');
+Route::get('/generate-chart','ChartController@generate');
 

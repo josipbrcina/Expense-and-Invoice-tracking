@@ -31,14 +31,14 @@ class ExpenseController extends Controller
         $companyQuery = Company::query();
         $expenseQuery = Expense::query();
 
-        // check if input created_at (from) exists
+        // check if input Expense start date exists
         if(\Input::has('startdate')) {
-            $expenseQuery->whereDate('created_at', '>=', \Input::get('startdate'));
+            $expenseQuery->where('date', '>=', \Input::get('startdate'));
         }
 
-        // check if input created_at (to) exists
+        // check if input Expense end date exists
         if(\Input::has('enddate')){
-            $expenseQuery->whereDate('created_at', '<=', \Input::get('enddate'));
+            $expenseQuery->where('date', '<=', \Input::get('enddate'));
         }
 
         // check if input amount (from) exists
@@ -100,6 +100,7 @@ class ExpenseController extends Controller
         $rules = array(
             'type'        => 'required',
             'name'        => 'required',
+            'date'        => 'required',
             'amount'      => 'required',
             'company_id'  => 'required'
         );
@@ -109,12 +110,13 @@ class ExpenseController extends Controller
         if ($validator->fails()) {
             return \Redirect::to('expenses/create')
                 ->withErrors($validator)
-                ->withInput(\Input::except('type', 'name', 'amount', 'company_id'));
+                ->withInput(\Input::except('type', 'name', 'date' , 'amount', 'company_id'));
         } else {
             // store
             $expense = new Expense;
             $expense->type       = \Input::get('type');
             $expense->name       = \Input::get('name');
+            $expense->date       = \Input::get('date');
             $expense->amount     = \Input::get('amount');
             $expense->company_id = \Input::get('company_id');
             $expense->user_id    = \Input::get('user_id');
@@ -164,6 +166,7 @@ class ExpenseController extends Controller
         $rules = array(
             'type'        => 'required',
             'name'        => 'required',
+            'date'        => 'required',
             'amount'      => 'required',
             'company_id'  => 'required'
         );
@@ -173,12 +176,13 @@ class ExpenseController extends Controller
         if ($validator->fails()) {
             return \Redirect::to('expenses/' . $id .'/edit')
                 ->withErrors($validator)
-                ->withInput(\Input::except('type', 'name', 'amount', 'company_id'));
+                ->withInput(\Input::except('type', 'name', 'date', 'amount', 'company_id'));
         } else {
             // store
             $expense = Expense::find($id);
             $expense->type       = \Input::get('type');
             $expense->name       = \Input::get('name');
+            $expense->date       = \Input::get('date');
             $expense->amount     = \Input::get('amount');
             $expense->company_id = \Input::get('company_id');
             $expense->user_id    = \Input::get('user_id');

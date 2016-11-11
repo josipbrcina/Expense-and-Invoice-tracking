@@ -18,10 +18,12 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <!-- Scripts -->
-    <!-- <script src="/js/app.js"></script> -->
+    <!-- load app javascript, jquery and jquery UI for datepicker -->
+    <script src="/js/app.js"></script>
 
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
     <script>
         $( function() {
             $( "#datepicker, #datepicker2" ).datepicker({
@@ -29,6 +31,10 @@
             });
         } );
     </script>
+    <!-- load ChartJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+
+    <!-- Delete button authorization -->
     <script>
         function ConfirmDelete()
         {
@@ -39,6 +45,7 @@
                 return false;
         }
     </script>
+
 </body>
     <footer class="row">
         @include('includes.footer')
