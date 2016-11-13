@@ -50,9 +50,11 @@
     <script>
         $(function () {
             // create data object
+            var labels = [1,2,3,4,5,6,7,8,9,10,11,12];
 
             var data = {
-                labels : ["January", "February", "March", "April", ["June","2015"], "July", "August", "September", "October", "November", "December"],
+                labels : labels,
+
                 datasets : [
                     {
                         label: 'Expenses',
@@ -61,7 +63,7 @@
                         strokeColor: "rgba(220,220,220,1)",
                         pointColor: "rgba(220,220,220,1)",
                         pointStrokeColor: "#fff",
-                        data: [90+100, 20, 110, 81, 56, 55, 44, 124, 55, 65, 133,]
+                        data: [13,14]
 
 
                     },
@@ -72,7 +74,7 @@
                         strokeColor: "rgba(220,220,220,1)",
                         pointColor: "rgba(220,220,220,1)",
                         pointStrokeColor: "#fff",
-                        data: [65, 59, 80, 81, 56, 55, 40, 96, 105, 44, 150]
+                        data: [10,13]
 
                     }
                 ]

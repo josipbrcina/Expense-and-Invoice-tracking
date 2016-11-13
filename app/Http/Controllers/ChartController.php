@@ -26,13 +26,13 @@ class ChartController extends Controller
         $invoiceQuery = Invoice::query();
 
         // check if input Chart start date exists
-        if(\Input::has('startdate')) {
+        if(\Input::has('startdate')){
             $expenseQuery->where('date', '>=', \Input::get('startdate'));
             $invoiceQuery->where('due_date', '>=', \Input::get('startdate'));
         }
 
         // check if input Chart end date exists
-        if(\Input::has('enddate')){
+        if(\Input::has('enddate')) {
             $expenseQuery->where('date', '<=', \Input::get('enddate'));
             $invoiceQuery->where('due_date', '<=', \Input::get('enddate'));
         }
@@ -41,43 +41,39 @@ class ChartController extends Controller
         $expensesArray = $expenseQuery->get();
         $invoicesArray = $invoiceQuery->get();
 
-
-
-        // calculate expenses and invoices for each month for Chart display
-
+        // define month labels and datasets for chart
         $expensesChart = [];
         $invoicesChart = [];
+        $monthsChart   = [];
 
-            // loop and fill expensesChart array with month => total expenses
-        foreach ($expensesArray as $expense){
+        // calculate months period and fill $monthsChart array
+        $start    = (new \DateTime(\Input::get('startdate')))->modify('first day of this month');
+        $end      = (new \DateTime(\Input::get('enddate')))->modify('first day of next month');
+        $interval = \DateInterval::createFromDateString('1 month');
+        $period   = new \DatePeriod($start, $interval, $end);
+
+        foreach ($period as $dt) {
+            $monthsChart[] = [$dt->format("m"), $dt->format("Y")];
+        }
+
+        // loop expenses and invoices and fill arrays $expensesChart and $invoicesChart in right order
+        for ($i=$start; $i < $end; $i->modify('+1 day')){
+            $expensesChart[$i->format("m-Y")] = 0;
+            $invoicesChart[$i->format("m-Y")] = 0;
+            foreach ($expensesArray as $expense){
                 $date = date("n", strtotime($expense->date));
-                if(empty($expensesChart)){
-                    $expensesChart[$date] = $expense->amount;
-                } elseif (key_exists($date, $expensesChart)){
-                    $expensesChart[$date] += $expense->amount;
-                } else {
-                    $expensesChart[$date] = $expense->amount;
+                if($date == $i->format("m")){
+                    $expensesChart[$i->format("m-Y")] += $expense->amount;
                 }
-        }
-
-            // loop and fill invoicesChart array with month => total invoices
-
-        foreach ($invoicesArray as $invoice){
-            $date = date("n", strtotime($invoice->due_date));
-            if(empty($invoicesChart)){
-                $invoicesChart[$date] = $invoice->amount;
-            } elseif (key_exists($date, $invoicesChart)){
-                $invoicesChart[$date] += $invoice->amount;
-            } else {
-                $invoicesChart[$date] = $invoice->amount;
             }
+            foreach ($invoicesArray as $invoice){
+                $date = date("n", strtotime($invoice->due_date));
+                if($date == $i->format("m")){
+                    $invoicesChart[$i->format("m-Y")] += $invoice->amount;
+                }
+            }
+
         }
-
-        // sort expensesChart and invoicesChart array by month (low to high)
-
-        ksort($expensesChart);
-        ksort($invoicesChart);
-
 
         // find total number of Expenses and Invoices for view report
         $totalExpenses = [];
@@ -93,8 +89,9 @@ class ChartController extends Controller
 
         // return view with all required data for displaying chart and report
         return View('pages.chart', [
-                                    'expenses' => $expensesArray,
-                                    'invoices' => $invoicesArray,
+                                    'expenseschart' => json_encode($expensesChart),
+                                    'invoiceschart' => json_encode($invoicesChart),
+                                    'monthschart'   => json_encode($monthsChart),
                                     'totalExpenses' => array_sum($totalExpenses),
                                     'totalInvoices' => array_sum($totalInvoices),
                                     'difference'    => array_sum($totalInvoices)-array_sum($totalExpenses)
