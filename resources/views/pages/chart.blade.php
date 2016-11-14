@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-7 col-md-offset-2">
-            {{ Form::open(array('url' => '/generate-chart', 'method' => 'get', 'class' => ' form-horizontal')) }}
+            {{ Form::open(array('url' => '/chart', 'method' => 'get', 'class' => ' form-horizontal')) }}
 
             <div class="col-xs-4 col-md-4">
                 {{ Form::label('startdate', 'Start date') }}

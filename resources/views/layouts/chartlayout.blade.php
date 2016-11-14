@@ -50,46 +50,46 @@
     <script>
         $(function () {
             // create data object
-            var labels = [1,2,3,4,5,6,7,8,9,10,11,12];
+            var labels = <?= $monthschart ?>;
 
             var data = {
                 labels : labels,
 
                 datasets : [
-                    {
-                        label: 'Expenses',
-                        borderColor: "F5F5DC",
-                        fillColor: "rgba(220,220,220,0.4)",
-                        strokeColor: "rgba(220,220,220,1)",
-                        pointColor: "rgba(220,220,220,1)",
-                        pointStrokeColor: "#fff",
-                        data: [13,14]
+                            {
+                                label: 'Invoices',
+                                borderColor: "F5F5DC",
+                                fillColor: "rgba(220,220,220,0.2)",
+                                strokeColor: "rgba(220,220,220,1)",
+                                pointColor: "rgba(220,220,220,1)",
+                                pointStrokeColor: "#fff",
+                                data: <?= $invoiceschart ?>
 
+                            },
+                            {
+                                label: 'Expenses',
+                                borderColor: "F5F5DC",
+                                fillColor: "rgba(220,200,220,3)",
+                                strokeColor: "rgba(220,200,220,1)",
+                                pointColor: "rgba(220,200,220,1)",
+                                pointStrokeColor: "#fff",
+                                data: <?= $expenseschart ?>
 
-                    },
-                    {
-                        label: 'Invoices',
-                        borderColor: "F5F5DC",
-                        fillColor: "rgba(220,220,220,0.2)",
-                        strokeColor: "rgba(220,220,220,1)",
-                        pointColor: "rgba(220,220,220,1)",
-                        pointStrokeColor: "#fff",
-                        data: [10,13]
-
-                    }
-                ]
+                            }
+                            ]
             };
 
-            var option = {
+            var options = {
                 BezierCurveTension : 0.2,
                 pointDotRadius : 4,
+                multiTooltipTemplate: "<%= datasetLabel %>: <%= value %>"
 
             };
 
-            //get the content of canvas element we want to select
+            //get the content of canvas element we want to show chart
 
             var chart = document.getElementById('chart').getContext('2d');
-            var lineChartInstance = new Chart(chart).Line(data, option);
+            var lineChartInstance = new Chart(chart).Line(data, options);
 
         });
 
