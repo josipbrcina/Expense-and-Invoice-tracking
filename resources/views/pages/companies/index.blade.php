@@ -38,12 +38,8 @@
                         <td>{{ $company->address }}</td>
                         <td>{{ $company->created_at }}</td>
                         <td>{{ $company->updated_at }}</td>
-
                         <td>{{ $company->user->name }}</td>
-
-
                         <td>
-
                             <a class="btn btn-small btn-primary" href="{{ URL::to('companies/' . $company->id . '/edit') }}">Edit</a>
                             {{ Form::open(array('url' => 'companies/' . $company->id, 'class' => 'pull-right', 'onsubmit' => 'return ConfirmDelete()')) }}
                             {{ Form::hidden('_method', 'DELETE') }}

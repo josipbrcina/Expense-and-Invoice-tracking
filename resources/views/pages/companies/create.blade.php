@@ -6,7 +6,6 @@
             <div class="col-md-6 col-md-offset-2">
                 <p align="center">Add new company</p>
                 {{ Form::open(array('url' => 'companies')) }}
-
                 {{ Html::ul($errors->all()) }}
 
                 <div class="form-group">
@@ -24,13 +23,10 @@
                     {{ Form::text('OIB', Input::old('OIB'), array('class' => 'form-control')) }}
                 </div>
 
-                {{ Form::hidden('user_id', Auth::user()->id) }}
-
-                {{ Form::submit('Create new Company!', array('class' => 'btn btn-primary')) }}
-                <button class="btn btn-danger" onclick="history.go(-1)";> Cancel </button>
-
-                {{ Form::close() }}
-
+                    {{ Form::hidden('user_id', Auth::user()->id) }}
+                    {{ Form::submit('Create new Company!', array('class' => 'btn btn-primary')) }}
+                    <button class="btn btn-danger" onclick="history.go(-1)";> Cancel </button>
+                    {{ Form::close() }}
             </div>
         </div>
     </div>

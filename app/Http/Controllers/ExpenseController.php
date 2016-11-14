@@ -10,8 +10,16 @@ use Illuminate\Http\Request;
 class ExpenseController extends Controller
 {
 
+    /**
+     * ExpenseController constructor.
+     */
     public function __construct()
     {
+        /**
+         * The middleware registered on the controller.
+         *
+         * @var
+         */
         $this->middleware('auth');
     }
     
@@ -26,40 +34,58 @@ class ExpenseController extends Controller
         return View('pages.expenses.index')->withExpenses($allExpenses);
     }
 
+    /**
+     * Search Invoices based on Input
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function search()
     {
         $companyQuery = Company::query();
         $expenseQuery = Expense::query();
 
-        // check if input Expense start date exists
+        /**
+         * check if input Expense start date exists
+         */
         if(\Input::has('startdate')) {
             $expenseQuery->where('date', '>=', \Input::get('startdate'));
         }
 
-        // check if input Expense end date exists
+        /**
+         * check if input Expense end date exists
+         */
         if(\Input::has('enddate')){
             $expenseQuery->where('date', '<=', \Input::get('enddate'));
         }
 
-        // check if input amount (from) exists
+        /**
+         * check if input amount (from) exists
+         */
         if(\Input::has('startamount')) {
             $expenseQuery->where('amount', '>=', \Input::get('startamount'));
         }
 
-        // check if input amount (to) exists
+        /**
+         * check if input amount (to) exists
+         */
         if(\Input::has('endamount')){
             $expenseQuery->where('amount', '<=', \Input::get('endamount'));
         }
 
-        // confirm query
+        /**
+         * Confirm query and get data from DB
+         */
         $expensesArray = $expenseQuery->get();
 
-        //check if input name exists, if do exist -> loop through Company
+        /**
+         * check if input name exists, if do exist -> loop through Company
+         */
         if(\Input::has('name')) {
             $name = '%' . \Input::get('name') . '%';
             $companies = $companyQuery->where('name', 'LIKE', $name)->get();
 
-            // loop through companies and expenses, find match and fill array
+            /**
+             * loop through companies and expenses, find match and fill array
+             */
             $tmpExpenses = [];
             foreach ($companies as $company){
                 foreach ($expensesArray as $expense){
@@ -70,11 +96,11 @@ class ExpenseController extends Controller
                     }
                 }
             }
-
-            // revert variables - prepare for return into view
+            /**
+             * revert variables - prepare for return into view
+             */
             $expensesArray = $tmpExpenses;
         }
-
         return View('pages.expenses.index', ['expenses' => $expensesArray]);
     }
 
@@ -106,13 +132,18 @@ class ExpenseController extends Controller
         );
         $validator = \Validator::make(\Input::all(), $rules);
 
-        // process the create
+        /**
+         * Redirection if validator fails
+         */
         if ($validator->fails()) {
             return \Redirect::to('expenses/create')
                 ->withErrors($validator)
                 ->withInput(\Input::except('type', 'name', 'date' , 'amount', 'company_id'));
         } else {
-            // store
+
+            /**
+             * If everything is ok store data
+             */
             $expense = new Expense;
             $expense->type       = \Input::get('type');
             $expense->name       = \Input::get('name');
@@ -122,7 +153,9 @@ class ExpenseController extends Controller
             $expense->user_id    = \Input::get('user_id');
             $expense->save();
 
-            // redirect
+            /**
+             * redirect after success
+             */
             \Session::flash('message', 'Successfully created expense!');
             return \Redirect::to('expenses');
         }
@@ -172,13 +205,17 @@ class ExpenseController extends Controller
         );
         $validator = \Validator::make(\Input::all(), $rules);
 
-        // process the create
+        /**
+         * Redirection if validator fails
+         */
         if ($validator->fails()) {
             return \Redirect::to('expenses/' . $id .'/edit')
                 ->withErrors($validator)
                 ->withInput(\Input::except('type', 'name', 'date', 'amount', 'company_id'));
         } else {
-            // store
+            /**
+             * If everything is ok store data
+             */
             $expense = Expense::find($id);
             $expense->type       = \Input::get('type');
             $expense->name       = \Input::get('name');
@@ -188,7 +225,9 @@ class ExpenseController extends Controller
             $expense->user_id    = \Input::get('user_id');
             $expense->save();
 
-            // redirect
+            /**
+             * redirect after success
+             */
             \Session::flash('message', 'Successfully updated expense!');
             return \Redirect::to('expenses');
         }
@@ -202,15 +241,10 @@ class ExpenseController extends Controller
      */
     public function destroy($id)
     {
-        // delete
         $expense = Expense::find($id);
         $expense->delete();
 
-        //redirect
-
         \Session::flash('message', 'Successfully deleted expense!');
         return \Redirect::to('expenses');
-
-
     }
 }

@@ -10,10 +10,12 @@
                 {{ Form::label('startdate', 'Start date') }}
                 {{ Form::text('startdate', Input::old('startdate'), array('class' => 'form-control', 'id' => 'datepicker')) }}
             </div>
+
             <div class="col-xs-4 col-md-4">
                 {{ Form::label('enddate', 'End date') }}
                 {{ Form::text('enddate', Input::old('enddate'), array('class' => 'form-control', 'id' => 'datepicker2')) }}
             </div>
+
             <div class="col-xs-4 col-md-4">
                 {{ Form::submit('Generate', array('class' => 'btn btn-primary')) }}
                 {{ Form::close() }}

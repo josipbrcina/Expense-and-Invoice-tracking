@@ -11,15 +11,26 @@ class ChartController extends Controller
 
     public function __construct()
     {
+        /**
+         * The middleware registered on the controller.
+         *
+         * @var
+         */
         $this->middleware('auth');
     }
 
+    /**
+     * Calculate and send values back to view for display chart on chart page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         $expenseQuery = Expense::query();
         $invoiceQuery = Invoice::query();
 
-        // check if input Chart start date exists
+        /**
+         *  check if input Chart start date exists
+         */
         if(\Input::has('startdate')){
             $expenseQuery->where('date', '>=', \Input::get('startdate'));
             $invoiceQuery->where('due_date', '>=', \Input::get('startdate'));
@@ -28,7 +39,10 @@ class ChartController extends Controller
             $start = (new \DateTime('1 year ago'))->modify('first day of this month');
         }
 
-        // check if input Chart end date exists
+
+        /**
+         * check if input Chart end date exists
+         */
         if(\Input::has('enddate')) {
             $expenseQuery->where('date', '<=', \Input::get('enddate'));
             $invoiceQuery->where('due_date', '<=', \Input::get('enddate'));
@@ -37,17 +51,23 @@ class ChartController extends Controller
             $end = (new \DateTime())->modify('first day of this month');
         }
 
-        // confirm query
+
+        /**
+         * confirm query, get values from DB
+         */
         $expensesArray = $expenseQuery->get();
         $invoicesArray = $invoiceQuery->get();
 
-        // define month labels and datasets for chart and report
+        /**
+         * define arrays for chart data output
+         */
         $expensesChart = [];
         $invoicesChart = [];
         $monthsChart   = [];
 
-
-        // calculate months period and fill $monthsChart array
+        /**
+         * calculate months period and fill $monthsChart array
+         */
         $interval = \DateInterval::createFromDateString('1 month');
         $period   = new \DatePeriod($start, $interval, $end);
 
@@ -55,7 +75,10 @@ class ChartController extends Controller
             $monthsChart[] = [$dt->format("F"), $dt->format("Y")];
         }
 
-        // loop expenses and invoices and fill arrays $expensesChart and $invoicesChart in right order
+
+        /**
+         * loop expenses and invoices and fill arrays $expensesChart and $invoicesChart in right order
+         */
         for ($i=$start; $i < $end; $i->modify('+1 day')){
             $expensesChart[$i->format("m-Y")] = 0;
             $invoicesChart[$i->format("m-Y")] = 0;
@@ -73,7 +96,10 @@ class ChartController extends Controller
             }
 
         }
-        // format expenses and invoices array for chart display
+
+        /**
+         * format expenses and invoices array for chart display
+         */
         $tmpExpenses = [];
         foreach ($expensesChart as $expense){
             $tmpExpenses[] = $expense;
@@ -86,11 +112,15 @@ class ChartController extends Controller
         }
         $invoicesChart = $tmpInvoices;
 
-        //calculate total expenses and invoices
+        /**
+         * calculate total expenses and invoices
+         */
         $totalExpenses = array_sum($expensesChart);
         $totalInvoices = array_sum($invoicesChart);
 
-        // return view with all required data for displaying chart and report
+        /**
+         * return view with all required data for displaying chart and report
+         */
         return View('pages.chart', [
                                     'expenseschart' => json_encode($expensesChart),
                                     'invoiceschart' => json_encode($invoicesChart),

@@ -5,9 +5,8 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-2">
                 <p align="center">Edit company : {{ $company->name }}</p>
-                {{ Form::model($company, array('route' => array('companies.update', $company->id), 'method' => 'PATCH')) }}
-
-                {{ Html::ul($errors->all()) }}
+                    {{ Form::model($company, array('route' => array('companies.update', $company->id), 'method' => 'PATCH')) }}
+                    {{ Html::ul($errors->all()) }}
 
                 <div class="form-group">
                     {{ Form::label('name', 'Name') }}
@@ -24,13 +23,10 @@
                     {{ Form::text('OIB', Input::old('OIB'), array('class' => 'form-control')) }}
                 </div>
 
-                {{ Form::hidden('user_id', Auth::user()->id) }}
-
-                {{ Form::submit('Edit existing Company!', array('class' => 'btn btn-primary')) }}
-                <button class="btn btn-danger" onclick="history.go(-1)";> Cancel </button>
-
-                {{ Form::close() }}
-
+                    {{ Form::hidden('user_id', Auth::user()->id) }}
+                    {{ Form::submit('Edit existing Company!', array('class' => 'btn btn-primary')) }}
+                    <button class="btn btn-danger" onclick="history.go(-1)";> Cancel </button>
+                    {{ Form::close() }}
             </div>
         </div>
     </div>

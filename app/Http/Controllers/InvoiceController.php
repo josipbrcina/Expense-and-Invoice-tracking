@@ -8,9 +8,16 @@ use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
-
+    /**
+     * CompanyController constructor.
+     */
     public function __construct()
     {
+        /**
+         * The middleware registered on the controller.
+         *
+         * @var
+         */
         $this->middleware('auth');
     }
     
@@ -26,7 +33,7 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Handle the search query in pages.invoices.index
+     * Handle the search query
      * @return search result
      *
      */
@@ -35,35 +42,49 @@ class InvoiceController extends Controller
         $companyQuery = Company::query();
         $invoiceQuery = Invoice::query();
 
-        // check if input start due date exists
+        /**
+         * check if input start due date exists
+         */
         if(\Input::has('startdate')) {
             $invoiceQuery->where('due_date', '>=', \Input::get('startdate'));
         }
 
-        // check if input end due date exists
+        /**
+         * check if input end due date exists
+         */
         if(\Input::has('enddate')){
             $invoiceQuery->where('due_date', '<=', \Input::get('enddate'));
         }
 
-        // check if input amount (from) exists
+        /**
+         * check if input amount (from) exists
+         */
         if(\Input::has('startamount')) {
             $invoiceQuery->where('amount', '>=', \Input::get('startamount'));
         }
 
-        // check if input amount (to) exists
+        /**
+         * check if input amount (to) exists
+         */
         if(\Input::has('endamount')){
             $invoiceQuery->where('amount', '<=', \Input::get('endamount'));
         }
 
-        // confirm query
+        /**
+         * confirm query and get data from DB
+         */
         $invoicesArray = $invoiceQuery->get();
 
-        //check if input name exists, if do exist -> loop through Company
+        /**
+         * check if input name exists, if do exist -> loop through Company
+         */
         if(\Input::has('name')) {
             $name = '%' . \Input::get('name') . '%';
             $companies = $companyQuery->where('name', 'LIKE', $name)->get();
 
-            // loop through companies and invoices, find match and fill array
+            /**
+             * loop through companies and invoices, find match and fill array
+             */
             $tmpInvoices = [];
             foreach ($companies as $company){
                 foreach ($invoicesArray as $invoice){
@@ -75,7 +96,10 @@ class InvoiceController extends Controller
                 }
             }
 
-            // revert variables for view
+            /**
+             *  revert variables for view
+             */
+
             $invoicesArray = $tmpInvoices;
         }
 
@@ -108,13 +132,18 @@ class InvoiceController extends Controller
         );
         $validator = \Validator::make(\Input::all(), $rules);
 
-        // process the create
+        /**
+         * Redirection if validator fails
+         */
         if ($validator->fails()) {
             return \Redirect::to('invoices/create')
                 ->withErrors($validator)
                 ->withInput(\Input::except('due_date', 'company_id'));
         } else {
-            // store
+
+            /**
+             * If everything is ok store data
+             */
             $invoice = new invoice;
             $invoice->due_date   = \Input::get('due_date');
             $invoice->amount     = \Input::get('amount');
@@ -122,7 +151,9 @@ class InvoiceController extends Controller
             $invoice->user_id    = \Input::get('user_id');
             $invoice->save();
 
-            // redirect
+            /**
+             * redirect after success
+             */
             \Session::flash('message', 'Successfully created invoice!');
             return \Redirect::to('invoices');
         }
@@ -170,13 +201,18 @@ class InvoiceController extends Controller
         );
         $validator = \Validator::make(\Input::all(), $rules);
 
-        // process the create
+        /**
+         * Redirection if validator fails
+         */
         if ($validator->fails()) {
             return \Redirect::to('invoices/' . $id . '/edit')
                 ->withErrors($validator)
                 ->withInput(\Input::except('due_date', 'company_id'));
         } else {
-            // store
+
+            /**
+             * If everything is ok store data
+             */
             $invoice = Invoice::find($id);
             $invoice->due_date   = \Input::get('due_date');
             $invoice->amount     = \Input::get('amount');
@@ -184,7 +220,9 @@ class InvoiceController extends Controller
             $invoice->user_id    = \Input::get('user_id');
             $invoice->save();
 
-            // redirect
+            /**
+             * redirect after success
+             */
             \Session::flash('message', 'Successfully updated invoice!');
             return \Redirect::to('invoices');
         }
@@ -198,11 +236,9 @@ class InvoiceController extends Controller
      */
     public function destroy($id)
     {
-        // delete
         $invoice = Invoice::find($id);
         $invoice->delete();
-
-        //redirect
+        
         \Session::flash('message', 'Successfully deleted invoice!');
         return \Redirect::to('invoices');
     }

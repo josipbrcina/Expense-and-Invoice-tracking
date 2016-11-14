@@ -8,32 +8,38 @@
             <h2 align="center">{{ Session::get('message') }}</h2>
             @endif
             <h4 align="center"> List of all expenses</h4>
-            <a href="{{ URL::to('expenses/create') }}" class="btn btn-default">Add new expense</a>
+                <a href="{{ URL::to('expenses/create') }}" class="btn btn-default">Add new expense</a>
 
                 {{ Form::open(array('url' => '/search-expenses', 'method' => 'get', 'class' => ' form-horizontal')) }}
+
                 <div class="col-xs-4 col-md-4">
-                {{ Form::label('name', 'Company name') }}
-                {{ Form::text('name', Input::old('name'), array('class' => 'form-control')) }}
+                    {{ Form::label('name', 'Company name') }}
+                    {{ Form::text('name', Input::old('name'), array('class' => 'form-control')) }}
                 </div>
+
                 <div class="col-xs-4 col-md-4">
-                {{ Form::label('startdate', 'Expense start date') }}
-                {{ Form::text('startdate', Input::old('startdate'), array('class' => 'form-control', 'id' => 'datepicker')) }}
+                    {{ Form::label('startdate', 'Expense start date') }}
+                    {{ Form::text('startdate', Input::old('startdate'), array('class' => 'form-control', 'id' => 'datepicker')) }}
                 </div>
+
                 <div class="col-xs-4 col-md-4">
-                {{ Form::label('enddate', 'Expense end date') }}
-                {{ Form::text('enddate', Input::old('enddate'), array('class' => 'form-control', 'id' => 'datepicker2')) }}
+                    {{ Form::label('enddate', 'Expense end date') }}
+                    {{ Form::text('enddate', Input::old('enddate'), array('class' => 'form-control', 'id' => 'datepicker2')) }}
                 </div>
+
                 <div class="col-xs-4 col-md-4">
-                {{ Form::label('startamount', 'Amount (from)') }}
-                {{ Form::text('startamount', Input::old('startamount'), array('class' => 'form-control')) }}
+                    {{ Form::label('startamount', 'Amount (from)') }}
+                    {{ Form::text('startamount', Input::old('startamount'), array('class' => 'form-control')) }}
                 </div>
+
                 <div class="col-xs-4 col-md-4">
-                {{ Form::label('endamount', 'Amount (to)') }}
-                {{ Form::text('endamount', Input::old('endamount'), array('class' => 'form-control')) }}
+                    {{ Form::label('endamount', 'Amount (to)') }}
+                    {{ Form::text('endamount', Input::old('endamount'), array('class' => 'form-control')) }}
                 </div>
+
                 <div class="col-xs-4 col-md-4">
-                {{ Form::submit('Search', array('class' => 'btn btn-primary')) }}
-                {{ Form::close() }}
+                    {{ Form::submit('Search', array('class' => 'btn btn-primary')) }}
+                    {{ Form::close() }}
                 </div>
 
             <table class="table table-striped table-bordered">
@@ -63,16 +69,12 @@
                         <td>{{ $expense->created_at }}</td>
                         <td>{{ $expense->updated_at }}</td>
                         <td>{{ $expense->user->name }}</td>
-
-
                         <td>
-
                             <a class="btn btn-primary" href="{{ URL::to('expenses/' . $expense->id . '/edit') }}">Edit</a>
                             {{ Form::open(array('url' => 'expenses/' . $expense->id, 'class' => 'pull-right', 'onsubmit' => 'return ConfirmDelete()')) }}
                             {{ Form::hidden('_method', 'DELETE') }}
                             {{ Form::submit('Delete', array('class' => 'btn btn-danger')) }}
                             {{ Form::close() }}
-
                         </td>
                     </tr>
                 @endforeach

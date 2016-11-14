@@ -9,8 +9,16 @@ use Illuminate\Http\Request;
 class CompanyController extends Controller
 {
 
+    /**
+     * CompanyController constructor.
+     */
     public function __construct()
     {
+        /**
+         * The middleware registered on the controller.
+         *
+         * @var
+         */
         $this->middleware('auth');
     }
 
@@ -25,6 +33,11 @@ class CompanyController extends Controller
         return View('pages.companies.index')->withCompanies($allCompanies);
     }
 
+    /**
+     * Search Companies based on Input
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function search()
     {
         $company = Company::query();
@@ -63,13 +76,18 @@ class CompanyController extends Controller
         );
         $validator = \Validator::make(\Input::all(), $rules);
 
-        // process the create
+        /**
+         * Redirection if validator fails
+         */
         if ($validator->fails()) {
             return \Redirect::to('companies/create')
                 ->withErrors($validator)
                 ->withInput(\Input::except('name', 'address'));
         } else {
-            // store
+
+            /**
+             * If everything is ok store data
+             */
             $company = new Company;
             $company->OIB        = \Input::get('OIB');
             $company->name       = \Input::get('name');
@@ -77,7 +95,9 @@ class CompanyController extends Controller
             $company->user_id    = \Input::get('user_id');
             $company->save();
 
-            // redirect
+            /**
+             * redirect after success
+             */
             \Session::flash('message', 'Successfully created company!');
             return \Redirect::to('companies');
         }
@@ -123,13 +143,18 @@ class CompanyController extends Controller
         );
         $validator = \Validator::make(\Input::all(), $rules);
 
-        // process the update
+        /**
+         * Redirection if validator fails
+         */
         if ($validator->fails()) {
             return \Redirect::to('companies/' . $id . '/edit')
                 ->withErrors($validator)
                 ->withInput(\Input::except('name', 'address'));
         } else {
-            // store
+
+            /**
+             * If everything is ok store data
+             */
             $company = Company::find($id);
             $company->OIB        = \Input::get('OIB');
             $company->name       = \Input::get('name');
@@ -137,7 +162,9 @@ class CompanyController extends Controller
             $company->user_id    = \Input::get('user_id');
             $company->save();
 
-            // redirect
+            /**
+             * redirect after success
+             */
             \Session::flash('message', 'Successfully updated company!');
             return \Redirect::to('companies');
         }
@@ -151,11 +178,9 @@ class CompanyController extends Controller
      */
     public function destroy($id)
     {
-        // delete
         $company = Company::find($id);
         $company->delete();
 
-        // redirect
         \Session::flash('message', 'Successfully deleted the company!');
         return \Redirect::to('companies');
     }

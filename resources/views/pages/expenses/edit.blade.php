@@ -6,7 +6,6 @@
             <div class="col-md-6 col-md-offset-2">
                 <p align="center">Edit expense : {{ $expense->name }}</p>
                 {{ Form::model($expense, array('route' => array('expenses.update', $expense->id), 'method' => 'PATCH')) }}
-
                 {{ Html::ul($errors->all()) }}
 
                 <div class="form-group">
@@ -32,16 +31,12 @@
                 <div class="form-group">
                     {{ Form::label('company_id' , 'Company') }}
                     {{ Form::select('company_id' , $companies) }}
-
                 </div>
 
-                {{ Form::hidden('user_id', Auth::user()->id) }}
-
-                {{ Form::submit('Edit existing Expense!', array('class' => 'btn btn-primary')) }}
-                <button class="btn btn-danger" onclick="history.go(-1)";> Cancel </button>
-
-                {{ Form::close() }}
-
+                    {{ Form::hidden('user_id', Auth::user()->id) }}
+                    {{ Form::submit('Edit existing Expense!', array('class' => 'btn btn-primary')) }}
+                    <button class="btn btn-danger" onclick="history.go(-1)";> Cancel </button>
+                    {{ Form::close() }}
             </div>
         </div>
     </div>
